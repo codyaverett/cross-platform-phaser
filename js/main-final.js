@@ -139,12 +139,10 @@ var GameState = {
     else {
       this.player.animations.stop();
       this.player.frame = 3;
-
     }
 
     if(this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.body.velocity.y = -this.JUMPING_SPEED;
-      this.player.customParams.mustJump = false;
     }
 
     this.barrels.forEach(function(element){
@@ -180,7 +178,7 @@ var GameState = {
 };
 
 //initiate the Phaser framework
-var game = new Phaser.Game(360, 592, Phaser.AUTO);
+var game = new Phaser.Game(360, 592, Phaser.SHOW_ALL);
 
 game.state.add('GameState', GameState);
 game.state.start('GameState');
