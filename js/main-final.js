@@ -28,6 +28,9 @@ var GameState = {
     //adapt to screen size, fit all the game
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
+    // Enable Screen Controls
+    this.onScreenInput = true;
+
     //game alignment
     this.scale.pageAlignHorizontally = true;
     this.scale.pageAlignVertically = true;
@@ -104,8 +107,13 @@ var GameState = {
     this.player.animations.add('walking', [0, 1, 2, 1], 6, true);
     this.game.physics.arcade.enable(this.player);
     this.player.body.collideWorldBounds = true;
+    this.player.customParams = { isMovingLeft: false, isMovingRight: false, mustJump: false };
 
     this.game.camera.follow(this.player);
+
+    if (this.onScreenInput) {
+      this.createOnScreenControls();
+    }
 
     this.barrels = this.add.group();
     this.barrels.enableBody = true;
@@ -114,6 +122,7 @@ var GameState = {
     this.barrelCreator = this.game.time.events.loop(Phaser.Timer.SECOND * this.levelData.barrelFrequency, this.createBarrel, this)
   },
   update: function() {
+
     this.game.physics.arcade.collide(this.player, this.ground);
     this.game.physics.arcade.collide(this.player, this.platforms);
 
@@ -126,12 +135,12 @@ var GameState = {
 
     this.player.body.velocity.x = 0;
 
-    if(this.cursors.left.isDown) {
+    if(this.cursors.left.isDown || this.player.customParams.isMovingLeft) {
       this.player.body.velocity.x = -this.RUNNING_SPEED;
       this.player.scale.setTo(1, 1);
       this.player.play('walking');
     }
-    else if(this.cursors.right.isDown) {
+    else if(this.cursors.right.isDown || this.player.customParams.isMovingRight) {
       this.player.body.velocity.x = this.RUNNING_SPEED;
       this.player.scale.setTo(-1, 1);
       this.player.play('walking');
@@ -143,6 +152,11 @@ var GameState = {
 
     if(this.cursors.up.isDown && this.player.body.touching.down) {
       this.player.body.velocity.y = -this.JUMPING_SPEED;
+    }
+
+    if(this.player.customParams.mustJump && this.player.body.touching.down) {
+      this.player.body.velocity.y = -this.JUMPING_SPEED;
+      this.player.customParams.mustJump = true;
     }
 
     this.barrels.forEach(function(element){
@@ -173,12 +187,68 @@ var GameState = {
 
     barrel.reset(this.levelData.goal.x, this.levelData.goal.y);
     barrel.body.velocity.x = this.levelData.barrelSpeed;
+  },
+  createOnScreenControls: function() {
+    this.leftArrow = this.add.button(20, 535, 'arrowButton');
+    this.rightArrow = this.add.button(110, 535, 'arrowButton');
+    this.actionButton = this.add.button(280, 535, 'actionButton');
+
+    this.leftArrow.alpha = 0.5;
+    this.rightArrow.alpha = 0.5;
+    this.actionButton.alpha = 0.5;
+
+    this.leftArrow.fixedToCamera = true
+    this.rightArrow.fixedToCamera = true;
+    this.actionButton.fixedToCamera = true;
+
+    this.actionButton.events.onInputDown.add(function() {
+      this.player.customParams.mustJump = true;
+    }, this);
+
+    this.actionButton.events.onInputUp.add(function() {
+      this.player.customParams.mustJump = false;
+    }, this);
+
+    // Left
+    this.leftArrow.events.onInputDown.add(function() {
+      this.player.customParams.isMovingLeft = true;
+    }, this);
+
+    this.leftArrow.events.onInputUp.add(function() {
+      this.player.customParams.isMovingLeft = false;
+    }, this);
+
+    this.leftArrow.events.onInputOver.add(function() {
+      this.player.customParams.isMovingLeft = true;
+    }, this);
+
+    this.leftArrow.events.onInputOver.add(function() {
+      this.player.customParams.isMovingLeft = true;
+    }, this);
+
+    // Right
+    this.rightArrow.events.onInputDown.add(function() {
+      this.player.customParams.isMovingRight = true;
+    }, this);
+
+    this.rightArrow.events.onInputUp.add(function() {
+      this.player.customParams.isMovingRight = false;
+    }, this);
+
+    this.rightArrow.events.onInputOver.add(function() {
+      this.player.customParams.isMovingRight = true;
+    }, this);
+
+    this.rightArrow.events.onInputOver.add(function() {
+      this.player.customParams.isMovingRight = true;
+    }, this);
+
   }
 
 };
 
 //initiate the Phaser framework
-var game = new Phaser.Game(360, 592, Phaser.SHOW_ALL);
+var game = new Phaser.Game(360, 592, Phaser.AUTO);
 
 game.state.add('GameState', GameState);
 game.state.start('GameState');
