@@ -1,0 +1,26 @@
+{
+  "name": "cross-platform-phaser",
+  "version": "1.0.0",
+  "description": "Make your phaser project scale",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "toc": "markdown-toc -i README.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codyaverett/cross-platform-phaser.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codyaverett/cross-platform-phaser/issues"
+  },
+  "homepage": "https://github.com/codyaverett/cross-platform-phaser#readme",
+  "devDependencies": {
+    "markdown-toc": "^1.2.0"
+  }
+}
