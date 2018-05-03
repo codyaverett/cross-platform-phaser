@@ -27,11 +27,60 @@ Making your game cross platform means your app/game will work and scale to multi
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 ```
 
-Additional information on the viewport meta tag can be found on `Mozilla Developer Networks website`
+Additional information on the viewport meta tag can be found on [Mozilla's Developer Network website (MDN)](https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag)
 
 ## Device Input
 
 In order to truely have a good cross-platform experience you need to consider how people will interact with your app.  You develop on a computer, you likely have a keyboard, don't just asume everyone has a keyboard or controller.
+
+Add buttons like you would any other object in Phaser.
+
+```javascript
+// Create sprites in your game "Pre-Load" step
+this.load.image('arrowButton', 'assets/images/arrowButton.png');
+this.load.image('actionButton', 'assets/images/actionButton.png');
+// ...ect
+
+// Render the buttons in the "Create" step
+this.leftArrow = this.add.button(20, 535, 'arrowButton');
+this.rightArrow = this.add.button(110, 535, 'arrowButton');
+this.actionButton = this.add.button(280, 535, 'actionButton');
+// ...ect
+```
+
+Then you an attach event handlers to set player action states when the button is clicked or tapped.
+
+```javascript
+// In your game "Create" step
+
+// Left
+this.leftArrow.events.onInputDown.add(function() {
+    this.player.customParams.isMovingLeft = true;
+}, this);
+
+this.leftArrow.events.onInputUp.add(function() {
+    this.player.customParams.isMovingLeft = false;
+}, this);
+
+this.leftArrow.events.onInputOver.add(function() {
+    this.player.customParams.isMovingLeft = true;
+}, this);
+
+this.leftArrow.events.onInputOut.add(function() {
+    this.player.customParams.isMovingLeft = false;
+}, this);
+
+// Right
+this.rightArrow.events.onInputDown.add(function() {
+    this.player.customParams.isMovingLeft = true;
+}, this);
+
+this.rightArrow.events.onInputUp.add(function() {
+    this.player.customParams.isMovingLeft = false;
+}, this);
+
+// ...ect
+```
 
 ## Hosting your app
 

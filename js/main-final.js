@@ -222,8 +222,8 @@ var GameState = {
       this.player.customParams.isMovingLeft = true;
     }, this);
 
-    this.leftArrow.events.onInputOver.add(function() {
-      this.player.customParams.isMovingLeft = true;
+    this.leftArrow.events.onInputOut.add(function() {
+      this.player.customParams.isMovingLeft = false;
     }, this);
 
     // Right
@@ -239,8 +239,8 @@ var GameState = {
       this.player.customParams.isMovingRight = true;
     }, this);
 
-    this.rightArrow.events.onInputOver.add(function() {
-      this.player.customParams.isMovingRight = true;
+    this.rightArrow.events.onInputOut.add(function() {
+      this.player.customParams.isMovingRight = false;
     }, this);
 
   }
